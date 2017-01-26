@@ -22,20 +22,20 @@ from charms.reactive.bus import get_states
 from charmhelpers.core import hookenv
 
 
-class FlaskSlaveProvides(RelationBase):
+class FlaskMasterProvides(RelationBase):
     scope = scopes.UNIT
 
-    @hook('{provides:flask-slave}-relation-joined')
+    @hook('{provides:flask-master}-relation-joined')
     def joined(self):
         conv = self.conversation()
         conv.set_state('{relation_name}.related')
         hookenv.log('States: {}'.format(get_states().keys()))
 
-    @hook('{provides:flask-slave}-relation-departed')
+    @hook('{provides:flask-master}-relation-departed')
     def departed(self):
         conv = self.conversation()
         conv.remove_state('{relation_name}.related')
 
     def send_message(self, message):
         for conv in self.conversations():
-            conv.set_remote('message', message)
+            conv.set_remote('motd', message)

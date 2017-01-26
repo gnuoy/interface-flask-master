@@ -19,25 +19,25 @@ from charms.reactive import hook
 from charms.reactive import scopes
 
 
-class FlaskSlaveRequires(RelationBase):
+class FlaskMasterRequires(RelationBase):
     scope = scopes.UNIT
 
     # These remote data fields will be automatically mapped to accessors
     # with a basic documentation string provided.
 
-    @hook('{requires:flask-slave}-relation-joined')
+    @hook('{requires:flask-master}-relation-joined')
     def joined(self):
         conv = self.conversation()
         conv.set_state('{relation_name}.connected')
 
-    @hook('{requires:flask-slave}-relation-changed')
+    @hook('{requires:flask-master}-relation-changed')
     def changed(self):
         conv = self.conversation()
         conv.set_state('{relation_name}.connected')
         if self.data_complete():
             conv.set_state('{relation_name}.available')
 
-    @hook('{requires:flask-slave}-relation-{broken,departed}')
+    @hook('{requires:flask-master}-relation-{broken,departed}')
     def departed_or_broken(self):
         conv = self.conversation()
         conv.remove_state('{relation_name}.connected')
